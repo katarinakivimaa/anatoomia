@@ -162,6 +162,7 @@ function dragStart(event) {
 function dragEnter(event) {
   if (event.target.classList.contains("droppable") && !event.target.classList.contains("dropped")) {
     event.target.classList.add("droppable-hover");
+    event.target.classList.remove("false");
   }
 }
 
@@ -182,17 +183,23 @@ function drop(event) {
   const draggableElementBrand = event.dataTransfer.getData("text");
   const droppableElementBrand = event.target.getAttribute("data-brand");
   const isCorrectMatching = draggableElementBrand === droppableElementBrand;
+  const isFalseMatching = draggableElementBrand != droppableElementBrand;
 
   if (isCorrectMatching) {
     const draggableElement = document.getElementById(draggableElementBrand);
     const imagePath = `assets/${draggableElementBrand}.png`;
     event.target.classList.remove("droppable-hover");
+    event.target.classList.remove("false");
     event.target.classList.add("dropped");
     draggableElement.classList.add("dragged");
     draggableElement.setAttribute("draggable", "false");
     event.target.innerHTML = `<img src="${imagePath}" alt="${draggableElementBrand}">`;
     
     correct++; // Increment correct score
+  }
+  if (isFalseMatching) {
+    event.target.classList.remove("droppable-hover"); // Removes the drop hover
+    event.target.classList.add("false");
   }
 
   total++; // Increment total attempts
